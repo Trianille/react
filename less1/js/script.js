@@ -66,6 +66,7 @@ task3 = {
 
         Bob.developers[0].changeManager(Rob); //bob - 0, rob - 2;
 
+        //console.log(Rob);
         console.log(Bob.displayInfo());
         console.log(Rob.displayInfo());
     }
@@ -90,12 +91,12 @@ class Employee extends Human {
     }
 
     displayInfo() {
-        return `${super.displayInfo()} Salary: ${this.salary} Departament: ${this.department}`;
+        return `${super.displayInfo()}, Salary: ${this.salary}, Departament: ${this.department}`;
     }
 };
 
 class Developer extends Employee {
-    constructor(manager = null, id = NaN, name, age, dateOfBirth, salary, department) {
+    constructor(name, age, dateOfBirth, salary, department, manager = null, id = NaN) {
         super(name, age, dateOfBirth, salary, department);
         this.manager = manager;
         this.id = id
@@ -104,21 +105,21 @@ class Developer extends Employee {
     changeManager(manager) {
         this.manager.delDev(this);
         this.manager = manager;
-        this.manager.addDev(this);
+        this.manager.developers.push(this);
     };
 
 };
 
 class Manager extends Employee {
-    constructor(name, age, dateOfBirth, salary, department, id) {
-        super(name, age, dateOfBirth, salary, department, id);
+    constructor(name, age, dateOfBirth, salary, department) {
+        super(name, age, dateOfBirth, salary, department);
         this.developers = [];
         this.idCount = 0;
     }
 
-    addDev(...args) {
+    addDev(name, age, dateOfBirth, salary, department) {
         this.idCount++
-        this.developers.push(new Developer(this, this.idCount, args));
+        this.developers.push(new Developer(name, age, dateOfBirth, salary, department, this, this.idCount));
     }
 
     delDev(dev) {
@@ -128,7 +129,7 @@ class Manager extends Employee {
 
     displayInfo() {
         const [dev1, dev2, ...rest] = this.developers;
-        return `${super.displayInfo()} Developers: ${dev1}, ${dev2}, and ${rest.length} more, Departament: ${this.department}`;
+        return `${super.displayInfo()} Developers: ${dev1 ? dev1.name : ''}${dev2 ? ', ' + dev2.name : ''}${this.developers.length > 0 ? ' and ' + rest.length + ' more' : 0}, Departament: ${this.department}`;
     }
 };
 
